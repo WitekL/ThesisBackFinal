@@ -11,6 +11,11 @@ class ComputationController < ApplicationController
     render json: json_response
   end
 
+  def creator
+    byebug
+    puts 'test'
+  end
+
   private
 
   def simulation_params
@@ -26,20 +31,25 @@ class ComputationController < ApplicationController
     truncated_lines = lines[1..-1]
     splited_lines = truncated_lines.map { |line| line.split(' ') }
 
-    values_hash = splited_lines.map do |line|
-      line[1..-1].each_slice(2).map.with_index do |val, index|
-        {
-          PARAMETERS[index] =>
-          {
-            re: val[0],
-            im: val[1]
-          }
-        }
+    hash_params = {
+      'freq' => [],
+      're1' => [],
+      'im1' => [],
+      're2' => [],
+      'im2' => [],
+      're3' => [],
+      'im3' => [],
+      're4' => [],
+      'im4' => []
+    }
+
+    splited_lines.each do |line|
+      line.each_with_index do |val, index|
+        hash_params[hash_params.keys[index]].push(val)
       end
     end
 
-    mapped_freq = splited_lines.map.with_index { |line, index| { line[0] => values_hash[index] } }
-    { 'parameters' => mapped_freq.inject(&:merge) }
+    hash_params
   end
 
   PARAMETERS = %w[S11 S21 S12 S22]

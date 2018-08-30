@@ -25,7 +25,7 @@ module ThesisBackFinal
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
-        resource '*', headers: :any, methods: [:update]
+        resource '*', headers: :any, methods: [:update, :post]
       end
     end
     # Settings in config/environments/* take precedence over those specified here.
