@@ -12,17 +12,24 @@ class ComputationController < ApplicationController
   end
 
   def creator
-    byebug
-    puts 'test'
+    netlist = NetlistComposer.new(permitted_params).call
+    converted_file = FileConverter.new(File.open(netlist)).call
+    result = CircuitSimulator.new(converted_file, simulation_params).call
+
+    touchstone_params = compose_json(result)
+    touchstone_file = File.read(result)
+    json_response = touchstone_params.merge(file: touchstone_file)
+
+    render json: json_response
   end
 
   private
 
   def simulation_params
     {
-      start_frequency: params[:start_frequency],
-      stop_frequency: params[:stop_frequency],
-      points_count: params[:points_count]
+      start_frequency: params[:start_frequency].presence || params[:parameters][:startFrequency],
+      stop_frequency: params[:stop_frequency].presence || params[:parameters][:stopFrequency],
+      points_count: params[:points_count].presence || params[:parameters][:pointsCount]
     }
   end
 
@@ -50,6 +57,10 @@ class ComputationController < ApplicationController
     end
 
     hash_params
+  end
+
+  def permitted_params
+    params.permit!
   end
 
   PARAMETERS = %w[S11 S21 S12 S22]
