@@ -56,6 +56,32 @@ class ComputationController < ApplicationController
       end
     end
 
+    prepare_magnitudes(hash_params)
+  end
+
+  def prepare_magnitudes(real_imaginary)
+    frequencies = real_imaginary['freq']
+    real_imaginary.delete('freq')
+
+    hash_params = {
+      'a11' => [],
+      'a12' => [],
+      'a21' => [],
+      'a22' => []
+    }
+
+    real_imaginary.each_slice(2).with_index do |pair, outer|
+      pair[0][1].each_with_index do |value, inner|
+        real = BigDecimal.new(value)
+        imaginary = BigDecimal.new(pair[1][1][inner])
+        sum = real**2 + imaginary**2
+        magnitude = Math.sqrt(sum)
+
+        hash_params[hash_params.keys[outer]].push(magnitude)
+      end
+    end
+
+    hash_params[:freq] = frequencies
     hash_params
   end
 

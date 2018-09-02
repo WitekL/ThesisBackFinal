@@ -49,6 +49,6 @@ class CircuitSimulator
   end
 
   def compose_simulation_params(params)
-    ".SP:SP1 Type=\"lin\" Start=\"#{params[:start_frequency]} GHz\" Stop=\"#{params[:stop_frequency]} GHz\" Points=\"#{params[:points_count]}\" Noise=\"no\" NoiseIP=\"1\" NoiseOP=\"2\" saveCVs=\"no\" saveAll=\"no\""
+    ".SP:SP1 Type=\"log\" Start=\"#{params[:start_frequency]} MHz\" Stop=\"#{params[:stop_frequency]} MHz\" Points=\"#{params[:points_count]}\" Noise=\"no\" NoiseIP=\"1\" NoiseOP=\"2\" saveCVs=\"no\" saveAll=\"no\""
   end
 end
